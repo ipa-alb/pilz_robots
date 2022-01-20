@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+
+<robot name="prbt" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- parameter -->
+  <xacro:arg name="gripper" default=""/>
+  <xacro:property name="gripper" value="$(arg gripper)"/>
+  <xacro:arg name="prefix" default="prbt_"/>
+  
+  <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an
+                     external frame of reference (considered fixed with respect to the robot)-->
+  <virtual_joint name="FixedBase" type="fixed" parent_frame="$(arg prefix)base_link" child_link="world" />
+
+  <!-- robot manipulator -->
+  <xacro:include filename="$(find prbt_moveit_config)/config/prbt_manipulator.srdf.xacro" />
+  <xacro:prbt_manipulator prefix="$(arg prefix)"/>
+  
+  <!-- has gripper -->
+  <xacro:unless value="${not gripper}">
+    <xacro:include filename="$(find prbt_${gripper}_support)/config/${gripper}.srdf.xacro" />
+  </xacro:unless>
+  
+  <group_state name="ready" group="manipulator">
+	<joint name="prbt_joint_1" value="1.5245" />
+	<joint name="prbt_joint_2" value="-0.26" />
+	<joint name="prbt_joint_3" value="1.26" />
+	<joint name="prbt_joint_4" value="1.60" />
+	<joint name="prbt_joint_5" value="0" />
+	<joint name="prbt_joint_6" value="0" />
+    </group_state>
+
+</robot>
